@@ -5,33 +5,42 @@ import { motion, AnimatePresence } from 'framer-motion';
 export const AboutSection = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [counter, setCounter] = useState(0);
+  const [reposNumber, setReposNumber] = useState(0)
+
+  useEffect(() => {
+    fetch('https://api.github.com/users/harveymarshall/repos?sort=updated&per_page=10')
+      .then(res => res.json())
+      .then(data => {
+        setReposNumber(Array.isArray(data) ? data.length : 0);
+      })
+      .catch(console.error);
+  }, []);
+
+  const yearsExp = 5
 
   const achievements = [
-    { number: "15+", label: "Projects", icon: <Briefcase className="h-5 w-5" />, suffix: "" },
-    { number: "1", label: "Years Exp", icon: <Calendar className="h-5 w-5" />, suffix: "+" },
-    { number: "99", label: "Success", icon: <Target className="h-5 w-5" />, suffix: "%" },
-    { number: "10", label: "Clients", icon: <User className="h-5 w-5" />, suffix: "+" }
+    { number: reposNumber, label: "Projects", icon: <Briefcase className="h-5 w-5" />, suffix: "" },
+    { number: yearsExp, label: "Years Exp", icon: <Calendar className="h-5 w-5" />, suffix: "+" }
   ];
 
   const techStack = [
-    { category: "Frontend", items: ["React", "Next.js", "TypeScript", "JavaScript", "HTML", "Tailwind"] },
-    { category: "Backend", items: ["Node.js", "Express", "Java", "Python"] },
-    { category: "Cloud", items: ["AWS", "Docker", "Vercel", "MongoDB"] }
+    { category: "Frontend", items: ["React", "Next.js", "TypeScript", "JavaScript", "HTML", "Tailwind", "Many More.."] },
+    { category: "Backend", items: ["Python", "Go", "Node.js", "Express", "SQL"] },
+    { category: "Cloud", items: ["AWS", "Docker", "GCP", "Azure", "Vercel", "MongoDB", "Object-Storage"] },
+    { category: "Data", items: ["Apache Airflow", "BigQuery", "Snowflake", "DBT", "Apache Kafka", "Microsoft Fabric"] }
   ];
 
-  const features = ["Full-stack expertise", "Clean, maintainable code", "Performance optimization", "Agile methodology", "24/7 support", "Timely delivery"];
+  //const features = ["Full-stack expertise", "Data Engineering", "Clean, maintainable code", "Performance optimization", "Agile methodology"];
 
   const socialLinks = [
     { icon: <Github className="h-5 w-5" />, href: "https://www.github.com/sahilmd01" },
     { icon: <Linkedin className="h-5 w-5" />, href: "https://www.linkedin.com/in/codewithkinu" },
-    { icon: <Twitter className="h-5 w-5" />, href: "#" },
     { icon: <Mail className="h-5 w-5" />, href: "mailto:sahilmd.dev@gmail.com" }
   ];
 
   const tabContent = {
-    personal: "Passionate about creating digital solutions that make a difference. When I'm not coding, I'm exploring new technologies, contributing to open-source, and mentoring aspiring developers.",
-    professional: "With 1+ years in full-stack development, I've delivered 15+ successful projects using modern technologies. I specialize in scalable architecture and performance optimization.",
+    personal: "Passionate about creating digital solutions that make a difference. When I'm not coding, I'm exploring new technologies, contributing to open-source or playing golf.",
+    professional: `With ${yearsExp}+ years in full-stack development and data engineering, I've delivered countless projects using modern technologies across several different companies. I specialize in building robust solutions focussing on scalable architecture and performance optimization.`,
     approach: "I believe in clean code, thorough testing, and user-centered design. My process emphasizes collaboration, agile methodologies, and continuous improvement."
   };
 
@@ -39,11 +48,6 @@ export const AboutSection = () => {
     const handleMouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => setCounter(prev => (prev + 1) % 4), 2000);
-    return () => clearInterval(interval);
   }, []);
 
   // Programmatic download function
@@ -82,7 +86,7 @@ export const AboutSection = () => {
             <span className="block text-primary animate-pulse">Ideas Into Reality</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Building digital experiences that combine <span className="text-primary font-semibold">innovation</span>, <span className="text-primary font-semibold">performance</span>, and <span className="text-primary font-semibold">elegance</span>
+            Building digital solutions that combine <span className="text-primary font-semibold">innovation</span>, <span className="text-primary font-semibold">performance</span>, and <span className="text-primary font-semibold">elegance</span>
           </p>
         </div>
 
@@ -102,20 +106,17 @@ export const AboutSection = () => {
                   {/* Profile Image */}
                   <div className="relative flex-shrink-0">
                     <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border-4 border-primary/20 shadow-2xl transition-all duration-500 group-hover:border-primary/40 group-hover:scale-105 md:group-hover:scale-110 relative">
-                      <img src="/profile-logo.png" alt="MD Sahil" className="w-full h-full object-cover" />
-                      <div className="absolute -bottom-2 -right-2 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full border-4 border-background flex items-center justify-center">
-                        <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
-                      </div>
+                      <img src="" alt="" className="w-full h-full object-cover" />
                     </div>
                   </div>
 
                   {/* Achievements */}
                   <div className="flex-1 text-center md:text-left">
-                    <h2 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">MD Sahil</h2>
-                    <p className="text-primary text-base sm:text-lg font-semibold mb-3 sm:mb-4">Full Stack Developer</p>
+                    <h2 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Harvey Marshall</h2>
+                    <p className="text-primary text-base sm:text-lg font-semibold mb-3 sm:mb-4">Full Stack Developer / Data Engineer</p>
                     <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
                       {achievements.map((achievement, index) => (
-                        <div key={index} className={`p-2 sm:p-3 rounded-xl bg-background/50 border border-border transition-all duration-300 hover:scale-105 hover:border-primary/30 ${counter === index ? 'bg-primary/10 border-primary/50' : ''}`}>
+                        <div key={index} className={"p-2 sm:p-3 rounded-xl bg-background/50 border border-border transition-all duration-300 hover:scale-105 hover:border-primary/30 hover:bg-primary/10"}>
                           <div className="flex items-center gap-2 justify-center md:justify-start">
                             {achievement.icon}
                             <div>
@@ -192,7 +193,7 @@ export const AboutSection = () => {
               <h3 className="text-lg sm:text-2xl font-bold mb-4 sm:mb-6 text-center">Let's Work Together</h3>
               <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
                 <a href="#contact" className="flex-1 block w-full p-3 sm:p-4 bg-primary text-primary-foreground rounded-xl text-center font-semibold transition-all duration-300 hover:bg-primary/90 hover:scale-105 hover:shadow-lg group">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3"><User className="h-4 sm:h-5 w-4 sm:w-5 group-hover:scale-110 transition-transform duration-300" />Start a Project</div>
+                  <div className="flex items-center justify-center gap-2 sm:gap-3"><User className="h-4 sm:h-5 w-4 sm:w-5 group-hover:scale-110 transition-transform duration-300" />Get In Touch</div>
                 </a>
 
                 {/* Download Button */}
@@ -215,18 +216,6 @@ export const AboutSection = () => {
                     <a key={index} href={social.href} className="p-2 bg-background rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 hover:scale-110">{social.icon}</a>
                   ))}
                 </div>
-              </div>
-            </div>
-
-            {/* Why Choose Me */}
-            <div className="bg-card/50 border border-border rounded-3xl p-4 sm:p-6 backdrop-blur-xl shadow-2xl transition-all duration-500 hover:shadow-3xl hover:border-primary/40 hover:bg-card/60">
-              <h3 className="text-base sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2"><Star className="h-4 sm:h-5 w-4 sm:w-5 text-primary" />Why Choose Me</h3>
-              <div className="space-y-2 sm:space-y-3">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-2 sm:gap-3 p-1 sm:p-2 rounded-lg transition-all duration-300 hover:bg-background/50 hover:scale-105">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse" /><span className="text-xs sm:text-sm text-muted-foreground hover:text-foreground">{feature}</span>
-                  </div>
-                ))}
               </div>
             </div>
 

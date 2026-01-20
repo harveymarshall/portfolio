@@ -62,6 +62,7 @@ const ThemeToggle = () => {
 export const Navbar = () => {
   const [activeSection, setActiveSection] = useState("#hero");
   const [showNavbar, setShowNavbar] = useState(true);
+  const [navbarVisible, setNavbarVisible] = useState(true);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isAudioReady, setIsAudioReady] = useState(false);
   const lastScrollYRef = useRef(0);
@@ -108,35 +109,29 @@ export const Navbar = () => {
 
       if (currentScrollY > lastScrollYRef.current && currentScrollY > 100) {
         setShowNavbar(false);
+        setNavbarVisible(false);  // NEW
       } else {
         setShowNavbar(true);
+        setNavbarVisible(true);   // NEW
       }
 
       lastScrollYRef.current = currentScrollY;
 
-      const sections = navItems.map((item) => item.href);
-      const scrollPosition = currentScrollY + 100;
-
-      for (const section of sections) {
-        const element = document.querySelector(section);
-        if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetHeight = element.offsetHeight;
-
-          if (
-            scrollPosition >= offsetTop &&
-            scrollPosition < offsetTop + offsetHeight
-          ) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
+      // ... rest of scroll logic stays the same
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (showNavbar) {
+      const timer = setTimeout(() => setNavbarVisible(true), 150);
+      return () => clearTimeout(timer);
+    } else {
+      setNavbarVisible(false);
+    }
+  }, [showNavbar]);
 
   return (
     <>
@@ -168,7 +163,7 @@ export const Navbar = () => {
 
         {/* GitHub Button */}
         <motion.a
-          href="https://github.com/sahilmd01" 
+          href="https://github.com/sahilmd01"
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
@@ -187,7 +182,7 @@ export const Navbar = () => {
 
         {/* LinkedIn Button */}
         <motion.a
-          href="https://linkedin.com/in/codewithkinu" 
+          href="https://linkedin.com/in/codewithkinu"
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
@@ -267,8 +262,8 @@ export const Navbar = () => {
                 href={item.href}
                 className={cn(
                   "p-2 rounded-full transition-colors flex flex-col items-center",
-                  activeSection === item.href
-                    ? "bg-primary text-white"
+                  navbarVisible && activeSection === item.href  // NEW CONDITION
+                    ? "bg-primary text-white shadow-md"        // Add shadow for better effect
                     : "text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
                 )}
                 aria-label={item.name}
